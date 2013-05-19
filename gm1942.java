@@ -624,7 +624,8 @@ public class gm1942 extends JApplet implements Runnable {
             sizeY = img1.getHeight(null);
             System.out.println("w:" + sizeX + " y:" + sizeY);
        }
-
+        
+        // update enemy position and check for collision with player bullets
         public void update() {
             if (y > 500) {
                 show = false;
@@ -647,7 +648,8 @@ public class gm1942 extends JApplet implements Runnable {
                 exList.add(new Explosion(this.x, this.y, 1));
             }
         }
-
+        
+        // draw enemy sprite
         public void draw(Graphics g, ImageObserver obs) {
             if (show) {
                 if (startTimer) {
@@ -671,11 +673,13 @@ public class gm1942 extends JApplet implements Runnable {
             }
         }
         
+        // return if enemy is alive or dead
         public boolean isShow() {
             return this.show;
         }
     }
     
+    // yellow plane enemy, flies from top or sides
     public class Enemy2 implements Enemy{
 
         Image img1, img2, img3, img4, img5, img6, img7, img8, img9;
@@ -704,7 +708,8 @@ public class gm1942 extends JApplet implements Runnable {
             sizeY = img1.getHeight(null);
             System.out.println("w:" + sizeX + " y:" + sizeY);
        }
-
+        
+        // update enemy position and shoot enemy bullets and check for collision
         public void update() {
             if (y > 500 || (type == 2 && x < -50) || (type == 3 && x > 640) ) {
                 show = false;
@@ -737,7 +742,8 @@ public class gm1942 extends JApplet implements Runnable {
                 exList.add(new Explosion(this.x, this.y, 1));
             }
         }
-
+        
+        // draw enemy sprite depending on enemy type
         public void draw(Graphics g, ImageObserver obs) {
             if (show) {
                 if (type == 1) {
@@ -806,6 +812,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
     
+    // white plane enemy, fires bullets, enters from top
     public class Enemy3 implements Enemy {
 
         Image img1, img2, img3;
@@ -826,7 +833,8 @@ public class gm1942 extends JApplet implements Runnable {
             sizeY = img1.getHeight(null);
             System.out.println("w:" + sizeX + " y:" + sizeY);
        }
-
+        
+        // update position, check for collision
         public void update() {
             if (y > 500) {
                 show = false;
@@ -854,6 +862,7 @@ public class gm1942 extends JApplet implements Runnable {
             }
         }
 
+        // draw enemy sprite
         public void draw(Graphics g, ImageObserver obs) {
             if (show) {
                 if (startTimer) {
@@ -882,6 +891,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
     
+    // blue plane enemy, comes from behind
     public class Enemy4 implements Enemy {
 
         Image img1, img2, img3;
@@ -902,7 +912,8 @@ public class gm1942 extends JApplet implements Runnable {
             sizeY = img1.getHeight(null);
             System.out.println("w:" + sizeX + " y:" + sizeY);
        }
-
+        
+        // update position, collision
         public void update() {
             if (y < -100) {
                 show = false;
@@ -926,6 +937,7 @@ public class gm1942 extends JApplet implements Runnable {
             }
         }
 
+        // draw enemy sprite
         public void draw(Graphics g, ImageObserver obs) {
             if (show) {
                 if (startTimer) {
@@ -954,6 +966,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
     
+    // enemy boss plane
     public class Boss implements Enemy {
 
         Image img, hit;
@@ -974,6 +987,7 @@ public class gm1942 extends JApplet implements Runnable {
             System.out.println("w:" + sizeX + " y:" + sizeY);
        }
 
+        // update position, fire bullets
         public void update() {
             if (y > 500) {
                 show = false;
@@ -1027,6 +1041,7 @@ public class gm1942 extends JApplet implements Runnable {
             }
         }
 
+        // draw enemy sprite
         public void draw(Graphics g, ImageObserver obs) {
             if (show  && !isHit) {
                 g.drawImage(img, x, y, obs);
@@ -1071,6 +1086,7 @@ public class gm1942 extends JApplet implements Runnable {
             System.out.println("PlayerBullet at x: " + x + " y: " + y);
        }
 
+        // update bullets position
         public void update() {
             if (type == 1) {
                 if (y < -2) { show = false; }
@@ -1086,6 +1102,7 @@ public class gm1942 extends JApplet implements Runnable {
             }
         }
 
+        // draw bullet sprite
         public void draw(Graphics g, ImageObserver obs) {
             if (show) {
                 if (type == 1) {
@@ -1137,6 +1154,7 @@ public class gm1942 extends JApplet implements Runnable {
             System.out.println("PlayerBullet at x: " + x + " y: " + y);
        }
 
+        // update bullet position
         public void update() {
             if (type == 1) {
                 if (y > 480) { show = false; }
@@ -1161,6 +1179,7 @@ public class gm1942 extends JApplet implements Runnable {
             }
         }
 
+        // draw bullet sprite
         public void draw(Graphics g, ImageObserver obs) {
             if (show) {
                 if (type == 1) {
@@ -1177,6 +1196,7 @@ public class gm1942 extends JApplet implements Runnable {
             return show;
         }
         
+        // check for bullet collision with other objects
         public boolean collision(int x, int y, int w, int h, int offset) {
             if(this.x+sizeX >= x+offset && this.x <= x+w-offset 
                     && this.y <= y+h-offset && this.y+sizeY >= y+offset) {
@@ -1188,6 +1208,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
     
+    // explosion for plane and enemies
     public class Explosion {
 
         Image img1, img2, img3, img4, img5, img6;
@@ -1220,11 +1241,13 @@ public class gm1942 extends JApplet implements Runnable {
             System.out.println("Explosion at x: " + x + " y: " + y);
        }
 
+        // update explosion position
         public void update() {
             if (y < -10) { show = false; }
             y -= speed;
         }
 
+        // draw explosion sprite
         public void draw(Graphics g, ImageObserver obs) {
             if (show) {
                 if (type == 1) {
@@ -1329,6 +1352,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
     
+    // power ups for player plane
     public class Items {
 
         Image img;
@@ -1348,6 +1372,7 @@ public class gm1942 extends JApplet implements Runnable {
             System.out.println("Item at x: " + x + " y: " + y);
        }
 
+        // update player position, bounce when hits edge of screen
         public void update() {
             if (x < 0) {
                 if (speedX < 0) {speedX = 2;}
@@ -1365,12 +1390,14 @@ public class gm1942 extends JApplet implements Runnable {
             x+=speedX;         
         }
 
+        // draw sprites
         public void draw(Graphics g, ImageObserver obs) {
             if (show) {
                 g.drawImage(img, x, y, sizeX, sizeY, obs);
             }
         }
         
+        // check for item collision with other objects
         public boolean collision(int x, int y, int w, int h, int offset) {
             if(this.x+sizeX >= x+offset && this.x <= x+w-offset 
                     && this.y <= y+h-offset && this.y+sizeY >= y+offset) {
@@ -1382,6 +1409,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
     
+    // calculate slope using to different positions
     public double slope(double x, double x2, double y, double y2) {
         double deltaX = x2 - x;
         double deltaY = y2 - y;
@@ -1389,6 +1417,7 @@ public class gm1942 extends JApplet implements Runnable {
         return Math.abs(slope);
     }
     
+    // class controls gameHUD
     public class gameHUD {
 
         Image healthBar, healthTick, life;
@@ -1403,6 +1432,7 @@ public class gm1942 extends JApplet implements Runnable {
            life = getSprite("Resources/life.png"); 
         }
 
+        // draw player health, boss health, lives, score, etc.
         public void draw(Graphics g, ImageObserver obs, int player) {
             g.setColor(Color.white);
             g.setFont(new Font ("Monospace", Font.BOLD, 12));
@@ -1435,6 +1465,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
     
+    // controls when enemies spawn
     public void timeline() {
         if (startTimer) {
             start = System.currentTimeMillis() / 1000;
@@ -1540,6 +1571,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
     
+    // load sprite image
     public Image getSprite(String name) {
         URL url = gm1942.class.getResource(name);
         Image img = getToolkit().getImage(url);
@@ -1574,6 +1606,7 @@ public class gm1942 extends JApplet implements Runnable {
         move += speed;
     }
 
+    // main game loops, calls all object update and draw methods
     public void drawDemo(int w, int h, Graphics2D g2) {
             if (gameOver) {
                 frame++;
@@ -1665,6 +1698,7 @@ public class gm1942 extends JApplet implements Runnable {
            }
     }
     
+    // fill scores with placeholder information
     public void fillScores() {
         // adding placement holder scores
         names.add("Scott");names.add("Scott");names.add("Scott");
@@ -1677,6 +1711,7 @@ public class gm1942 extends JApplet implements Runnable {
         scores.add("999999");
     }
     
+    // scoreboard information
     public void scoreBoard(Graphics g, ImageObserver obs) {
         g.setColor(Color.white);
         g.setFont(new Font ("Courier New", Font.BOLD, 18));
@@ -1697,6 +1732,7 @@ public class gm1942 extends JApplet implements Runnable {
         }   
     }
 
+    // create graphics object
     public Graphics2D createGraphics2D(int w, int h) {
         Graphics2D g2 = null;
         if (bimg == null || bimg.getWidth() != w || bimg.getHeight() != h) {
@@ -1710,6 +1746,7 @@ public class gm1942 extends JApplet implements Runnable {
         return g2;
     }
 
+    // paint screen onto buffered image
     public void paint(Graphics g) {
         Dimension d = getSize();
         Graphics2D g2 = createGraphics2D(d.width, d.height);
@@ -1718,17 +1755,20 @@ public class gm1942 extends JApplet implements Runnable {
         g.drawImage(bimg, 0, 0, this);
     }
 
+    // start applet thread
     public void start() {
         thread = new Thread(this);
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
     }
     
+    // destroy sound when applet is closed
     public void destroy() {
         bgm.close();
         System.exit(0);
     }
 
+    // run program in thread
     public void run() {
     	
         Thread me = Thread.currentThread();
@@ -1748,6 +1788,7 @@ public class gm1942 extends JApplet implements Runnable {
        // thread = null;
     }
 
+    // open sound file and play it
     private void playSound(String filename, int back) {
         URL url = gm1942.class.getResource(filename);
         try {
@@ -1769,6 +1810,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
 
+    // runs the applet program
     public static void main(String argv[]) {
         final gm1942 demo = new gm1942();
         demo.init();
