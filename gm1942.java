@@ -14,10 +14,7 @@ import java.util.Random;
 import javax.sound.sampled.*;
 import javax.swing.*;
 
-/**
- *
- * @author Ilmi
- */
+// Main Game engine
 public class gm1942 extends JApplet implements Runnable {
 
     private Thread thread; 
@@ -47,6 +44,7 @@ public class gm1942 extends JApplet implements Runnable {
     long start, end, time, waveTimeStart, waveTimeEnd;
     ImageObserver observer;
 
+    // initialize variables, files, sprites, level, before main game loop
     public void init() {
         setBackground(Color.white);
         Image island1, island2, island3;
@@ -82,6 +80,7 @@ public class gm1942 extends JApplet implements Runnable {
         
     }
 
+    // island background objects
     public class Island {
 
         Image img;
@@ -108,7 +107,9 @@ public class gm1942 extends JApplet implements Runnable {
             g.drawImage(img, x, y, obs);
         }
     }
-   public class GameEvents extends Observable {
+    
+    // events listener
+    public class GameEvents extends Observable {
        int type;
        int plane;
        Object event;
@@ -139,6 +140,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
 
+    // key listener
     public class KeyControl extends KeyAdapter {
 
         public void keyPressed(KeyEvent e) {
@@ -150,6 +152,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
 
+    // player 1 plane
     public class Plane1 implements Observer {
         Image img1, img2, img3;
         int x, y, speed;
@@ -183,6 +186,7 @@ public class gm1942 extends JApplet implements Runnable {
             invincible = false;
         }
 
+        // draw each frame of sprite after a certain amount of time
         public void draw(Graphics g, ImageObserver obs) {
             if(boom == 0) {
                 if (startTimer) {
@@ -206,6 +210,7 @@ public class gm1942 extends JApplet implements Runnable {
             }
         }
         
+        // collision algorithm checking
         public boolean collision(int x, int y, int w, int h, int offset) {
             if(this.x+sizeX >= x+offset && this.x <= x+w-offset 
                     && this.y+sizeY >= y+offset && this.y <= y+h-offset && boom == 0) {
@@ -221,6 +226,7 @@ public class gm1942 extends JApplet implements Runnable {
             return false;
         }
       
+        // check for key events and observer events
         public void update(Observable obj, Object arg) {
             GameEvents ge = (GameEvents) arg;
             if(ge.type == 1) {
@@ -300,18 +306,26 @@ public class gm1942 extends JApplet implements Runnable {
                 }
             }
         }
+        
+        // update plane position, lives, deaths, etc 
         public void update() {
             if (boom == 0 && invincible && ((System.currentTimeMillis() / 1000) - spawnTime) > 0) {
                 invincible = false;
             }
+            
+            // check for user keypresses and move plane accordingly
             if (left) { x -= speed; }
             if (right) { x += speed; }
             if (up) { y -= speed; }
             if (down) { y += speed; }
+            
+            // set plane boundaries
             if (x > 573) { x = 573; }
             if (x < -5) { x = -5; }
             if (y > 398) { y = 398; }
             if (y < -13) { y = -13; }
+            
+            // check for player death and respawn time
             if (boom == 1) {
                 if (deadTimer) {
                     deadTime = System.currentTimeMillis() / 1000;
@@ -331,6 +345,8 @@ public class gm1942 extends JApplet implements Runnable {
                     p1dead = true;
                 }
             }
+            
+            // check for player and enemy bullet collision
             for (int i=0; i<eBullet.size(); i++) {
                 Bullet eneBullet = (Bullet) eBullet.get(i);
                 if (health > 0) {
@@ -344,6 +360,8 @@ public class gm1942 extends JApplet implements Runnable {
                     }
                 }
             }
+            
+            // check for player and item collision
             if (boom == 0) {
                 for (int i=0; i<iList.size(); i++) {
                     Items i1 = (Items) iList.get(i);
@@ -355,6 +373,7 @@ public class gm1942 extends JApplet implements Runnable {
         }
     }
     
+    // player 2 plane
     public class Plane2 implements Observer {
         Image img1, img2, img3;
         int x, y, speed;
@@ -388,6 +407,7 @@ public class gm1942 extends JApplet implements Runnable {
             invincible = false;
         }
 
+        // draw sprite animation
         public void draw(Graphics g, ImageObserver obs) {
             if(boom == 0) {
                 if (startTimer) {
@@ -411,6 +431,7 @@ public class gm1942 extends JApplet implements Runnable {
             }
         }
         
+        // check for collision of plane 2
         public boolean collision(int x, int y, int w, int h, int offset) {
             if(this.x+sizeX >= x+offset && this.x <= x+w-offset 
                     && this.y+sizeY >= y+offset && this.y <= y+h-offset && boom == 0) {
@@ -426,6 +447,7 @@ public class gm1942 extends JApplet implements Runnable {
             return false;
         }
       
+        // check for keyevents and game events
         public void update(Observable obj, Object arg) {
             GameEvents ge = (GameEvents) arg;
             if(ge.type == 1) {
@@ -505,18 +527,26 @@ public class gm1942 extends JApplet implements Runnable {
                 }
             }
         }
+        
+        // update player position, lives, health, etc
         public void update() {
             if (boom == 0 && invincible && ((System.currentTimeMillis() / 1000) - spawnTime) > 0) {
                 invincible = false;
             }
+            
+            // check for user key press to move plane
             if (left) { x -= speed; }
             if (right) { x += speed; }
             if (up) { y -= speed; }
             if (down) { y += speed; }
+            
+            // set plane boundary
             if (x > 573) { x = 573; }
             if (x < -5) { x = -5; }
             if (y > 398) { y = 398; }
             if (y < -13) { y = -13; }
+            
+            // check if plane is dead and respawn plane after time has passed
             if (boom == 1) {
                 if (deadTimer) {
                     deadTime = System.currentTimeMillis() / 1000;
@@ -536,6 +566,8 @@ public class gm1942 extends JApplet implements Runnable {
                     p2dead = true;
                 }
             }
+            
+            // check for plane collision with bullets
             for (int i=0; i<eBullet.size(); i++) {
                 Bullet eneBullet = (Bullet) eBullet.get(i);
                 if (health > 0) {
@@ -549,6 +581,8 @@ public class gm1942 extends JApplet implements Runnable {
                     }
                 }
             }
+            
+            // check for plane collision with items
             if (boom == 0) {
                 for (int i=0; i<iList.size(); i++) {
                     Items i1 = (Items) iList.get(i);
@@ -569,6 +603,7 @@ public class gm1942 extends JApplet implements Runnable {
         public boolean isShow();
     }
 
+    // basic enemy flies from top to bottom
     public class Enemy1 implements Enemy{
 
         Image img1, img2, img3;
